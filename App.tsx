@@ -11,13 +11,13 @@ import React from 'react';
 import {SafeAreaView, StatusBar, StyleSheet} from 'react-native';
 
 import {Colors} from 'react-native/Libraries/NewAppScreen';
-import HomePage from './src/screen/HomePage';
+import Navigator from './src/navigation';
 
 const App = () => {
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle={'light-content'} />
-      <HomePage />
+      <Navigator />
     </SafeAreaView>
   );
 };

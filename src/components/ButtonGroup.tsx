@@ -1,16 +1,20 @@
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
-import {COLORS} from '../const/colors';
-import {IMAGES} from '../const/images';
+import {COLORS, IMAGES} from '../const';
 
 import Icon from './Icon';
 
-const ButtonGroup = () => {
+interface ButtonGroupProps {
+  onSearchPress?(): void;
+  onCartPress?(): void;
+}
+
+const ButtonGroup = ({onCartPress, onSearchPress}: ButtonGroupProps) => {
   return (
     <View style={styles.container}>
-      <Icon style={styles.icon} uri={IMAGES.search} />
+      <Icon onPress={onSearchPress} style={styles.icon} uri={IMAGES.search} />
 
-      <Icon style={styles.icon} uri={IMAGES.cart} />
+      <Icon onPress={onCartPress} style={styles.icon} uri={IMAGES.cart} />
     </View>
   );
 };

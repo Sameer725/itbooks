@@ -10,7 +10,7 @@ import {
 
 //@ts-ignore
 import Star from 'react-native-star-view';
-import {COLORS} from '../const/colors';
+import {COLORS} from '../const';
 
 import {Book} from '../types';
 
@@ -35,7 +35,7 @@ const BookItem: React.FC<{book: Book}> = ({book}) => {
 interface BookListProps
   extends Omit<FlatListProps<Book>, 'renderItem' | 'keyExtractor'> {}
 
-const BookList = ({data}: BookListProps) => {
+const BookList = ({data, ...rest}: BookListProps) => {
   return data?.length ? (
     <FlatList
       data={data}
@@ -43,6 +43,7 @@ const BookList = ({data}: BookListProps) => {
       renderItem={({item}) => <BookItem book={item} />}
       showsVerticalScrollIndicator={false}
       contentContainerStyle={styles.contentContainer}
+      {...rest}
     />
   ) : null;
 };

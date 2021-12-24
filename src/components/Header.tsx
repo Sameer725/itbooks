@@ -1,6 +1,7 @@
 import React from 'react';
 import {View, Image, StyleSheet} from 'react-native';
-import {COLORS} from '../const/colors';
+
+import {COLORS, IMAGES, STYLES} from '../const';
 
 const Header: React.FC = ({children}) => {
   return (
@@ -8,8 +9,8 @@ const Header: React.FC = ({children}) => {
       <View style={styles.logoContainer}>
         <Image
           resizeMode="contain"
-          style={styles.image}
-          source={{uri: 'https://itbook.store/img/logo.png'}}
+          style={STYLES.image}
+          source={{uri: IMAGES.logo}}
         />
       </View>
       {children}
@@ -27,10 +28,6 @@ const styles = StyleSheet.create({
 
   logoContainer: {
     flex: 0.3,
-  },
-  image: {
-    height: '100%',
-    width: '100%',
   },
 });
 

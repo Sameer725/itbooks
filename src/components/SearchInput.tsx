@@ -1,5 +1,6 @@
 import React from 'react';
 import {View, TextInput, StyleSheet} from 'react-native';
+import {IMAGES} from '../const';
 
 import Icon from './Icon';
 
@@ -17,8 +18,9 @@ const SearchInput: React.FC<SearchInputProps> = ({onChangeText, value}) => {
           placeholder="Search Books By Title"
           onChangeText={onChangeText}
           value={value}
+          autoFocus
         />
-        <Icon uri="https://itbook.store/img/search.png" />
+        <Icon uri={IMAGES.search} />
       </View>
     </View>
   );
