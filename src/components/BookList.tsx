@@ -7,6 +7,7 @@ import {
   View,
   Text,
 } from 'react-native';
+import {TouchableOpacity} from 'react-native-gesture-handler';
 
 //@ts-ignore
 import Star from 'react-native-star-view';
@@ -14,33 +15,45 @@ import {COLORS} from '../const';
 
 import {Book} from '../types';
 
-const BookItem: React.FC<{book: Book}> = ({book}) => {
+const BookItem: React.FC<{book: Book; onPress?(): void}> = ({
+  book,
+  onPress,
+}) => {
   return (
-    <View style={styles.itemContainer}>
-      <View style={styles.imageContainer}>
-        <Image style={styles.image} source={{uri: book.image}} />
-      </View>
-      <View style={styles.textContainer}>
-        <Text style={styles.text}>{book.title}</Text>
-      </View>
+    <TouchableOpacity onPress={onPress} disabled={!onPress}>
+      <View style={styles.itemContainer}>
+        <View style={styles.imageContainer}>
+          <Image style={styles.image} source={{uri: book.image}} />
+        </View>
+        <View style={styles.textContainer}>
+          <Text style={styles.text}>{book.title}</Text>
+        </View>
 
-      <View style={styles.detailContainer}>
-        <Star style={styles.star} score={Number(book.rating)} />
-        <Text style={styles.price}>{book.price}</Text>
+        <View style={styles.detailContainer}>
+          <Star style={styles.star} score={Number(book.rating)} />
+          <Text style={styles.price}>{book.price}</Text>
+        </View>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 
 interface BookListProps
-  extends Omit<FlatListProps<Book>, 'renderItem' | 'keyExtractor'> {}
+  extends Omit<FlatListProps<Book>, 'renderItem' | 'keyExtractor'> {
+  onItemPress?(book: Book): void;
+}
 
-const BookList = ({data, ...rest}: BookListProps) => {
+const BookList = ({data, onItemPress, ...rest}: BookListProps) => {
   return data?.length ? (
     <FlatList
       data={data}
       keyExtractor={item => item.isbn13}
-      renderItem={({item}) => <BookItem book={item} />}
+      renderItem={({item}) => (
+        <BookItem
+          book={item}
+          onPress={() => onItemPress && onItemPress(item)}
+        />
+      )}
       showsVerticalScrollIndicator={false}
       contentContainerStyle={styles.contentContainer}
       {...rest}

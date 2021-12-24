@@ -2,7 +2,7 @@ import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {Book} from '../types';
-import {HomePage, SearchPage} from '../screen';
+import {CartPage, DetailPage, HomePage, SearchPage} from '../screen';
 
 type NavigationStackType = {
   Home: undefined;
@@ -18,8 +18,8 @@ function NavigationStack() {
     <Stack.Navigator screenOptions={{header: () => null}}>
       <Stack.Screen name="Home" component={HomePage} />
       <Stack.Screen name="Search" component={SearchPage} />
-      <Stack.Screen name="Cart" component={HomePage} />
-      <Stack.Screen name="Detail" component={HomePage} />
+      <Stack.Screen name="Cart" component={CartPage} />
+      <Stack.Screen name="Detail" component={DetailPage} />
     </Stack.Navigator>
   );
 }

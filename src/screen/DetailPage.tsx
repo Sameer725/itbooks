@@ -1,21 +1,16 @@
 import React from 'react';
 import {Text, View} from 'react-native';
 import Header from '../components/Header';
-import SearchInput from '../components/SearchInput';
 
 import {STYLES} from '../const';
 import {useSetHeader} from '../utils/useSetHeader';
 
-function SearchPageHeader() {
-  return (
-    <Header>
-      <SearchInput />
-    </Header>
-  );
+function DetailPageHeader() {
+  return <Header />;
 }
 
-export const SearchPage = () => {
-  useSetHeader(SearchPageHeader);
+export const DetailPage = () => {
+  useSetHeader(DetailPageHeader);
 
   return (
     <View style={STYLES.container}>
