@@ -10,4 +10,9 @@ export const STYLES = StyleSheet.create({
     height: '100%',
     width: '100%',
   },
+  text: {
+    fontSize: 15,
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
 });
