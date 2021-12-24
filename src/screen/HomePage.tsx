@@ -9,7 +9,6 @@ import {useSetHeader} from '../utils/useSetHeader';
 import Header from '../components/Header';
 import ButtonGroup from '../components/ButtonGroup';
 import {STYLES} from '../const';
-import {useNavigation} from '@react-navigation/native';
 
 function HomePageHeader({navigation}: StackHeaderProps) {
   return (
@@ -23,17 +22,12 @@ function HomePageHeader({navigation}: StackHeaderProps) {
 }
 
 export const HomePage: React.FC = () => {
-  const {data} = useNewBooks();
-  const {navigate} = useNavigation();
+  const {data, isLoading} = useNewBooks();
   useSetHeader(HomePageHeader);
-
-  const onBookPress = (book: Book) => {
-    navigate('Detail', {book});
-  };
 
   return (
     <View style={STYLES.container}>
-      <BookList data={data?.books} onItemPress={onBookPress} />
+      <BookList data={data?.books} isLoading={isLoading} />
     </View>
   );
 };

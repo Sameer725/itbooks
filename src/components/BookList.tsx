@@ -1,4 +1,5 @@
-import React from 'react';
+import {useNavigation} from '@react-navigation/native';
+import React, {useCallback, useMemo} from 'react';
 import {
   FlatListProps,
   Image,
@@ -11,9 +12,10 @@ import {TouchableOpacity} from 'react-native-gesture-handler';
 
 //@ts-ignore
 import Star from 'react-native-star-view';
-import {COLORS} from '../const';
+import {COLORS, STYLES} from '../const';
 
 import {Book} from '../types';
+import Loader from './Loder';
 
 const BookItem: React.FC<{book: Book; onPress?(): void}> = ({
   book,
@@ -40,25 +42,45 @@ const BookItem: React.FC<{book: Book; onPress?(): void}> = ({
 
 interface BookListProps
   extends Omit<FlatListProps<Book>, 'renderItem' | 'keyExtractor'> {
-  onItemPress?(book: Book): void;
+  message?: string;
+  isLoading?: boolean;
 }
 
-const BookList = ({data, onItemPress, ...rest}: BookListProps) => {
+const BookList = ({data, message, isLoading, ...rest}: BookListProps) => {
+  const {navigate} = useNavigation();
+
+  const renderItem = useCallback(
+    ({item}) => {
+      return (
+        <BookItem
+          book={item}
+          onPress={() => navigate('Detail', {book: item})}
+        />
+      );
+    },
+    [navigate],
+  );
+
+  const MemoizedRender = useMemo(() => renderItem, [renderItem]);
+
   return data?.length ? (
     <FlatList
       data={data}
-      keyExtractor={item => item.isbn13}
-      renderItem={({item}) => (
-        <BookItem
-          book={item}
-          onPress={() => onItemPress && onItemPress(item)}
-        />
-      )}
+      keyExtractor={(item, index) => `${item.isbn13}-${index}`}
+      renderItem={MemoizedRender}
       showsVerticalScrollIndicator={false}
       contentContainerStyle={styles.contentContainer}
       {...rest}
     />
-  ) : null;
+  ) : (
+    <View style={[styles.messageContainer, STYLES.container]}>
+      {isLoading ? (
+        <Loader />
+      ) : (
+        <Text style={styles.message}>{message || 'No Data'}</Text>
+      )}
+    </View>
+  );
 };
 
 export default BookList;
@@ -107,5 +129,14 @@ const styles = StyleSheet.create({
   star: {
     width: 100,
     height: 20,
+  },
+  messageContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  message: {
+    fontSize: 25,
+    fontWeight: 'bold',
+    color: COLORS.blueBg,
   },
 });

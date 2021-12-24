@@ -6,10 +6,9 @@ import Icon from './Icon';
 
 interface SearchInputProps {
   onChangeText?(text: string): void;
-  value?: string;
 }
 
-const SearchInput: React.FC<SearchInputProps> = ({onChangeText, value}) => {
+const SearchInput: React.FC<SearchInputProps> = ({onChangeText}) => {
   return (
     <View style={styles.searchInput}>
       <View style={styles.inputContainer}>
@@ -17,7 +16,6 @@ const SearchInput: React.FC<SearchInputProps> = ({onChangeText, value}) => {
           style={styles.input}
           placeholder="Search Books By Title"
           onChangeText={onChangeText}
-          value={value}
           autoFocus
         />
         <Icon uri={IMAGES.search} />
