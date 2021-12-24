@@ -26,8 +26,8 @@ const SearchInput: React.FC<SearchInputProps> = ({onChangeText}) => {
 
 const styles = StyleSheet.create({
   searchInput: {
-    flex: 0.7,
-    marginLeft: 15,
+    flex: 0.8,
+    marginLeft: 50,
   },
   inputContainer: {
     flexDirection: 'row',
@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
 
   input: {
     backgroundColor: '#FFF',
-    paddingHorizontal: 15,
+    paddingHorizontal: 10,
     flex: 1,
   },
 });

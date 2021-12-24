@@ -12,7 +12,7 @@ import {STYLES} from '../const';
 
 function HomePageHeader({navigation}: StackHeaderProps) {
   return (
-    <Header>
+    <Header hideBack>
       <ButtonGroup
         onCartPress={() => navigation.navigate('Cart')}
         onSearchPress={() => navigation.navigate('Search')}
