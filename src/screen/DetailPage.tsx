@@ -10,19 +10,29 @@ import Header from '../components/Header';
 import Loader from '../components/Loder';
 
 import {COLORS, STYLES} from '../const';
+import {CartProvider, useCarts} from '../context/CartContext';
 import {Book} from '../types';
 import {useSetHeader} from '../utils/useSetHeader';
 
 interface BookDetailProps {
   title: string;
   uri: string;
+  price: string;
+  isbn13: string;
 }
 
 function DetailPageHeader() {
   return <Header />;
 }
 
-const BookDetail: React.FC<BookDetailProps> = ({uri, title}) => {
+const BookDetail: React.FC<BookDetailProps> = ({uri, title, isbn13, price}) => {
+  const {setCarts, carts} = useCarts();
+  const isAdded = !!carts.find(item => item.isbn13 === isbn13);
+
+  const onBuy = () => {
+    setCarts({isbn13, image: uri, price, title});
+  };
+
   return (
     <View style={[styles.detailContainer]}>
       <View style={styles.imageContainer}>
@@ -30,9 +40,13 @@ const BookDetail: React.FC<BookDetailProps> = ({uri, title}) => {
       </View>
       <View style={styles.titleContainer}>
         <Text style={[STYLES.text, {color: COLORS.blueText}]}>{title}</Text>
-        <TouchableOpacity>
-          <View style={styles.buttonContainer}>
-            <Text style={styles.buttonText}>Buy</Text>
+        <TouchableOpacity onPress={onBuy} disabled={isAdded}>
+          <View
+            style={[
+              styles.buttonContainer,
+              {backgroundColor: isAdded ? COLORS.redLight : COLORS.redPrimary},
+            ]}>
+            <Text style={styles.buttonText}>{isAdded ? 'Bought' : 'Buy'}</Text>
           </View>
         </TouchableOpacity>
       </View>
@@ -60,7 +74,7 @@ const BookDescription: React.FC<{detail: Book | null}> = ({detail}) => {
         const textTransform = TextTransform(item[0]);
 
         return (
-          <TableRow index={index}>
+          <TableRow key={`${item[0]}`} index={index}>
             <Text
               style={[
                 styles.rowTitle,
@@ -86,12 +100,18 @@ const BookDescription: React.FC<{detail: Book | null}> = ({detail}) => {
 export const DetailPage = () => {
   useSetHeader(DetailPageHeader);
   const {params} = useRoute() as {params: {book: Book}};
-  const {title, image, ...rest} = params?.book;
-  const {data, isLoading} = useBook(rest.isbn13);
+  const {title, price, isbn13, image} = params?.book;
+  const {data, isLoading} = useBook(isbn13);
 
   return (
     <View style={STYLES.container}>
-      <BookDetail title={title || ''} uri={image || ''} />
+      <BookDetail
+        title={title || ''}
+        uri={image || ''}
+        price={price || ''}
+        isbn13={isbn13}
+      />
+
       {isLoading ? <Loader /> : <BookDescription detail={data} />}
     </View>
   );
@@ -133,7 +153,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: '20%',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: COLORS.redPrimary,
   },
   buttonText: {
     color: COLORS.white,
