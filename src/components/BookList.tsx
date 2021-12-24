@@ -32,7 +32,7 @@ const BookItem: React.FC<{book: Book; onPress?(): void}> = ({
         </View>
 
         <View style={styles.detailContainer}>
-          <Star style={styles.star} score={Number(book.rating)} />
+          <Star style={STYLES.star} score={Number(book.rating)} />
           <Text style={styles.price}>{book.price}</Text>
         </View>
       </View>
@@ -124,11 +124,6 @@ const styles = StyleSheet.create({
     color: COLORS.redPrimary,
     fontSize: 15,
     fontWeight: 'bold',
-  },
-
-  star: {
-    width: 100,
-    height: 20,
   },
   messageContainer: {
     justifyContent: 'center',

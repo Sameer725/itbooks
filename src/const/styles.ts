@@ -15,4 +15,8 @@ export const STYLES = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center',
   },
+  star: {
+    width: 100,
+    height: 20,
+  },
 });

@@ -1,35 +1,35 @@
-import {useNavigation, useRoute} from '@react-navigation/native';
+import {useRoute} from '@react-navigation/native';
 import React from 'react';
-import {
-  Image,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TextStyle,
-  View,
-} from 'react-native';
+import {Image, ScrollView, StyleSheet, Text, View} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
+//@ts-ignore
+import Star from 'react-native-star-view';
+
 import useBook from '../api/useBook';
 import Header from '../components/Header';
+import Loader from '../components/Loder';
 
 import {COLORS, STYLES} from '../const';
 import {Book} from '../types';
 import {useSetHeader} from '../utils/useSetHeader';
 
+interface BookDetailProps {
+  title: string;
+  uri: string;
+}
+
 function DetailPageHeader() {
   return <Header />;
 }
 
-const BookDetail: React.FC<{book: Book | null}> = ({book}) => {
+const BookDetail: React.FC<BookDetailProps> = ({uri, title}) => {
   return (
     <View style={[styles.detailContainer]}>
       <View style={styles.imageContainer}>
-        <Image style={[STYLES.image]} source={{uri: book?.image}} />
+        <Image style={[STYLES.image]} source={{uri}} />
       </View>
       <View style={styles.titleContainer}>
-        <Text style={[STYLES.text, {color: COLORS.blueText}]}>
-          {book?.title}
-        </Text>
+        <Text style={[STYLES.text, {color: COLORS.blueText}]}>{title}</Text>
         <TouchableOpacity>
           <View style={styles.buttonContainer}>
             <Text style={styles.buttonText}>Buy</Text>
@@ -68,7 +68,11 @@ const BookDescription: React.FC<{detail: Book | null}> = ({detail}) => {
               ]}>
               {item[0]}
             </Text>
-            <Text style={[styles.rowTitle]}>{item[1]}</Text>
+            {item[0] === 'rating' ? (
+              <Star style={STYLES.star} score={Number(item[1])} />
+            ) : (
+              <Text style={[styles.rowTitle]}>{item[1]}</Text>
+            )}
           </TableRow>
         );
       })}
@@ -82,13 +86,13 @@ const BookDescription: React.FC<{detail: Book | null}> = ({detail}) => {
 export const DetailPage = () => {
   useSetHeader(DetailPageHeader);
   const {params} = useRoute() as {params: {book: Book}};
-  const {title, subtitle, description, image, url, ...rest} = params?.book;
-  const {data} = useBook(rest.isbn13);
+  const {title, image, ...rest} = params?.book;
+  const {data, isLoading} = useBook(rest.isbn13);
 
   return (
     <View style={STYLES.container}>
-      <BookDetail book={data} />
-      <BookDescription detail={data} />
+      <BookDetail title={title || ''} uri={image || ''} />
+      {isLoading ? <Loader /> : <BookDescription detail={data} />}
     </View>
   );
 };
