@@ -1,4 +1,4 @@
-import {useRoute} from '@react-navigation/native';
+import {useNavigation, useRoute} from '@react-navigation/native';
 import React from 'react';
 import {Image, ScrollView, StyleSheet, Text, View} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
@@ -26,11 +26,11 @@ function DetailPageHeader() {
 }
 
 const BookDetail: React.FC<BookDetailProps> = ({uri, title, isbn13, price}) => {
-  const {setCarts, carts} = useCarts();
+  const {addItem, carts} = useCarts();
   const isAdded = !!carts.find(item => item.isbn13 === isbn13);
 
   const onBuy = () => {
-    setCarts({isbn13, image: uri, price, title});
+    addItem({isbn13, image: uri, price, title});
   };
 
   return (

@@ -13,8 +13,9 @@ type CartType = Pick<Book, 'image' | 'title' | 'isbn13' | 'price'>;
 
 interface CartContextInterface {
   carts: CartType[];
-  initializeCarts(carts: CartType[]): void;
-  setCarts(item: CartType): void;
+  setCarts(item: CartType[]): void;
+  addItem(item: CartType): void;
+  removeItem(item: CartType): void;
 }
 
 const storeCarts = async (carts: CartType[]) => {
@@ -43,17 +44,21 @@ const CartContext = React.createContext<CartContextInterface | null>(null);
 export const CartProvider: React.FC = ({children}) => {
   const [carts, setCartState] = useState<CartType[]>([]);
 
-  const initializeCarts = useCallback((c: CartType[]) => {
+  const setCarts = useCallback((c: CartType[]) => {
     setCartState(c);
   }, []);
 
-  const setCarts = useCallback((cart: CartType) => {
+  const addItem = useCallback((cart: CartType) => {
     setCartState(state => [...state, cart]);
   }, []);
 
+  const removeItem = useCallback((cart: CartType) => {
+    setCartState(state => state.filter(item => item.isbn13 !== cart.isbn13));
+  }, []);
+
   const value = useMemo(() => {
-    return {carts, setCarts, initializeCarts: initializeCarts};
-  }, [carts, setCarts, initializeCarts]);
+    return {carts, setCarts, addItem, removeItem};
+  }, [carts, setCarts, addItem, removeItem]);
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
 };
@@ -69,14 +74,14 @@ export const useCarts = () => {
 };
 
 export const StoreCartComponent = () => {
-  const {carts, initializeCarts} = useCarts();
+  const {carts, setCarts} = useCarts();
 
   useEffect(() => {
-    getCarts().then(c => c && initializeCarts(c));
-  }, [initializeCarts]);
+    getCarts().then(c => c && setCarts(c));
+  }, [setCarts]);
 
   useEffect(() => {
-    carts.length && storeCarts(carts);
+    storeCarts(carts);
   }, [carts]);
 
   return null;
