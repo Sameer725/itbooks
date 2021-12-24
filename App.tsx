@@ -6,33 +6,26 @@
  * @flow strict-local
  */
 
-import React, {useState} from 'react';
+import React from 'react';
 
-import {Button, SafeAreaView, StatusBar, useColorScheme} from 'react-native';
+import {SafeAreaView, StatusBar, StyleSheet} from 'react-native';
 
 import {Colors} from 'react-native/Libraries/NewAppScreen';
-import useNewBooks from './src/api/useNewBooks';
+import HomePage from './src/screen/HomePage';
 
 const App = () => {
-  const isDarkMode = useColorScheme() === 'dark';
-  const [, setCounter] = useState(0);
-  useNewBooks();
-
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-    flex: 1,
-  };
-
-  const fun = () => {
-    return setCounter(s => s + 1);
-  };
-
   return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-      <Button title="ADD" onPress={fun} />
+    <SafeAreaView style={styles.container}>
+      <StatusBar barStyle={'light-content'} />
+      <HomePage />
     </SafeAreaView>
   );
 };
 
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: Colors.lighter,
+  },
+});
 export default App;

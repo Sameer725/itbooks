@@ -2,13 +2,17 @@ import React from 'react';
 
 type StatusType = 'idle' | 'pending' | 'rejected' | 'resolved';
 
-interface ResponseType {
+interface ResponseType<T> {
   status: StatusType;
-  data: null | any;
+  data: null | T;
   error: null | Error;
 }
 
-const defaultState: ResponseType = {data: null, error: null, status: 'idle'};
+const defaultState: ResponseType<null> = {
+  data: null,
+  error: null,
+  status: 'idle',
+};
 
 function useSafeDispatch(dispatch: any) {
   const mounted = React.useRef(false);
@@ -25,30 +29,19 @@ function useSafeDispatch(dispatch: any) {
   );
 }
 
-export default function useAsync(initialState: ResponseType = defaultState) {
+export default function useAsync<T>(initialState = defaultState) {
   const initialStateRef = React.useRef({...defaultState, ...initialState});
 
   const [{status, data, error}, dispatch] = React.useReducer<
-    (s: ResponseType, a: any) => ResponseType
+    (s: ResponseType<T>, a: any) => ResponseType<T>
   >((s, a) => ({...s, ...a}), initialStateRef.current);
 
   const safeDispatch = useSafeDispatch(dispatch);
 
-  const setData = React.useCallback(
-    (res: ResponseType['data']) =>
-      safeDispatch({data: res, status: 'resolved'}),
-    [safeDispatch],
-  );
-
-  const setError = React.useCallback(
-    (err: ResponseType['error']) => safeDispatch({err, status: 'rejected'}),
-    [safeDispatch],
-  );
-
   const run = React.useCallback(
     (
       promise:
-        | Promise<ResponseType['data'] | ResponseType['error']>
+        | Promise<ResponseType<T>['data'] | ResponseType<T>['error']>
         | undefined
         | null,
     ) => {
@@ -61,16 +54,16 @@ export default function useAsync(initialState: ResponseType = defaultState) {
 
       return promise.then(
         res => {
-          setData(res);
+          safeDispatch({data: res, status: 'resolved'});
           return res;
         },
         err => {
-          setError(err);
+          safeDispatch({err, status: 'rejected'});
           return Promise.reject(err);
         },
       );
     },
-    [safeDispatch, setData, setError],
+    [safeDispatch],
   );
 
   return {
