@@ -17,7 +17,7 @@ In another terminal, install the app on an iPhone simulator:
 ```
 yarn ios
 
-Note: The project hasn't been tested on ios device as I don't own any Apple devices.
+Note: The project hasn't been tested on ios device.
 ```
 
 In another terminal, install the app on an Android:
